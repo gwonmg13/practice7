@@ -33,26 +33,23 @@ public class Main2Activity extends AppCompatActivity {
         radio3 = (RadioButton)findViewById(R.id.radio3);
     }
     public void onClick(View v){
-        if(v.getId() == R.id.btnAdd){ //객체 저장 및 객체 전달
-            //추가한 날짜 얻기
+        if(v.getId() == R.id.btnAdd){
+
+            int category = 0;
+            if(radio1.isChecked()){ category = 1;}
+            else if(radio2.isChecked()){ category = 2;}
+            else if(radio3.isChecked()){ category = 3;}
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
             String createtime = df.format(new Date());
-            //사진정보를 저장
-            int pic = 0;
-            if(radio1.isChecked()){ pic = 1;}
-            else if(radio2.isChecked()){ pic = 2;}
-            else if(radio3.isChecked()){ pic = 3;}
-
-            //객체로 저장후 객체를 메인액티비티로 전달하기
             Intent intent = getIntent();
-            information inputed = intent.getParcelableExtra("inputdata");
-            inputed.information(etname.getText().toString(),ettel.getText().toString(),pic,etmenu1.getText().toString(),
+            information inputed = intent.getParcelableExtra("senddata2");
+            inputed.information(etname.getText().toString(),ettel.getText().toString(),category,etmenu1.getText().toString(),
                     etmenu2.getText().toString(),etmenu3.getText().toString(),etaddr.getText().toString(),createtime);
             intent.putExtra("remakemsg",inputed);
             setResult(RESULT_OK,intent);
             finish();
 
-        } else if ( v.getId() == R.id.btnCancel){ //에딧텍스트 초기화 및 액티비티 돌아가기
+        } else if ( v.getId() == R.id.btnCancel){
             radio1.setChecked(true);
             etname.setText("");
             ettel.setText("");

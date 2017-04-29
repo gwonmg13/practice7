@@ -25,61 +25,32 @@ public class MainActivity extends AppCompatActivity {
     adapter adapter;
     EditText editText;
     Button b4;
-    ArrayList<information> saveddata = new ArrayList<information>();
-    ArrayList<information> saveddata2 = new ArrayList<information>();
+    ArrayList<information> data = new ArrayList<information>();
+    ArrayList<information> data2 = new ArrayList<information>();
     ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        init();
+        Search();
         setListview();
     }
-    public void init(){
-        editText = (EditText)findViewById(R.id.editText);
-        b4 = (Button)findViewById(R.id.b4);
-
-        //
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String search = s.toString();
-                adapter.getFilter().filter(search);
-//                adapter.filter(search);
-            }
-
-            @Override           public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-
-
-    public void onClick(View v){ //두번째 메인액티비티 띄우기
+    public void onClick(View v){
         if(v.getId()==R.id.b1){
             Intent intent = new Intent(this,Main2Activity.class);
             information s1 = new information();
-            intent .putExtra("inputdata",s1);
+            intent.putExtra("senddata2",s1);
             startActivityForResult(intent,0);
         }
-        else if(v.getId() == R.id.b2){ //이름순 정렬
+        else if(v.getId() == R.id.b2){
             adapter.setNameAscSort();
         }
-        else if(v.getId() == R.id.b3){ //종류별 정렬
+        else if(v.getId() == R.id.b3){
             adapter.setPicAscSort();
         }
-        else if(v.getId() == R.id.b4){ //선택 및 삭제
+        else if(v.getId() == R.id.b4){
             if(b4.getText().toString() == "삭제"){
-
-                //삭제대화상자 및 삭제기능
                 AlertDialog.Builder dlg = new AlertDialog.Builder(MainActivity.this);
                 dlg.setTitle("")
                         .setIcon(R.drawable.pizza)
@@ -100,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
                                         .show();
                                 //삭제
                                 int i = 0;
-                                while(i < saveddata.size()){
-                                    if(saveddata.get(i).getChecked() == 1){
-                                        saveddata.remove(i);
+                                while(i < data.size()){
+                                    if(data.get(i).getChecked() == 1){
+                                       data.remove(i);
                                     } else {
                                         i++;
                                     }
                                 }
-                                adapter = new adapter(MainActivity.this,saveddata);
+                                adapter = new adapter(MainActivity.this,data);
                                 listView.setAdapter(adapter);
                                 adapter.turn(false);
                                 b4.setText("선택");
@@ -119,23 +90,20 @@ public class MainActivity extends AppCompatActivity {
                 //리스트뷰 선택기능 후 ;
                 adapter.turn(true);
             }
-
         }
-
-
     }
 
     public void setListview(){
         listView = (ListView)findViewById(R.id.listview) ;
 
         //어댑터 만들기 (데이터와 화면을 연결)
-        adapter = new adapter(this,saveddata);
+        adapter = new adapter(this,data);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, Main3Activity.class);
-                intent .putExtra("saveddata",saveddata.get(position));
+                intent .putExtra("senddata",data.get(position));
                 startActivity(intent);
             }
         });
@@ -146,11 +114,31 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == 0){
             if(resultCode == RESULT_OK){  //
                 information input = data.getParcelableExtra("remakemsg");
-                this.saveddata.add(input);
+                this.data.add(input);
                 adapter.notifyDataSetChanged();
 
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    public void Search(){
+        editText = (EditText)findViewById(R.id.editText);
+        b4 = (Button)findViewById(R.id.b4);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String search = s.toString();
+                adapter.getFilter().filter(search);
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

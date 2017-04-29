@@ -13,9 +13,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class Main3Activity extends AppCompatActivity {
-    TextView etmenu1, etmenu2, etmenu3, tvTel, tvURL, tvRegdate ,txtname;
-    ImageView imgno;
     information selected;
+    ImageView imgno;
+    TextView etmenu1, etmenu2, etmenu3, tvTel, tvURL, tvRegdate ,txtname;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,7 @@ public class Main3Activity extends AppCompatActivity {
         imgno = (ImageView)findViewById(R.id.imgno);
 
         Intent intent = getIntent();
-        selected  = (information)intent.getParcelableExtra("saveddata");
+        selected  = (information)intent.getParcelableExtra("senddata");
         //액티비티로 불러온 정보를 표시
             txtname.setText(selected.getName());
             etmenu1.setText(selected.getMenu1());
@@ -59,11 +60,11 @@ public class Main3Activity extends AppCompatActivity {
         if(v.getId() == R.id.btnback){
             finish();
         }
-        else if(v.getId() == R.id.imageView2){  //전화번호 창 띄우기
+        else if(v.getId() == R.id.imageView2){
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:/"+selected.getTelnum()));
             startActivity(intent);
         }
-        else if(v.getId() == R.id.imageView3){ //인터넷 연결?
+        else if(v.getId() == R.id.imageView3){
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://"+selected.getHomepage()));
             startActivity(intent);
         }
