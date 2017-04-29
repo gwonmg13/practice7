@@ -131,6 +131,29 @@ public class adapter extends BaseAdapter implements Filterable{
         ImageView imageView;
         CheckBox checkBox;
     }
+    Comparator<information> PicAsc = new Comparator<information>() {
+        @Override
+        public int compare(information o1, information o2) {
+            return Integer.toString(o1.getPic()).compareTo(Integer.toString(o2.getPic()));
+        }
+    };
+
+    public void setPicAscSort(){
+        Collections.sort(data2,PicAsc);
+        this.notifyDataSetChanged();
+    }
+
+    Comparator<information> nameAsc = new Comparator<information>() {
+        @Override
+        public int compare(information o1, information o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
+    public void setNameAscSort(){
+        Collections.sort(data2,nameAsc);
+        this.notifyDataSetChanged();
+    }
 
     public void filter(String searchText) {
 
@@ -147,27 +170,6 @@ public class adapter extends BaseAdapter implements Filterable{
         this.notifyDataSetChanged();
     }
 
-    Comparator<information> nameAsc = new Comparator<information>() {
-        @Override
-        public int compare(information o1, information o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
 
-    public void setNameAscSort(){
-        Collections.sort(data2,nameAsc);
-        this.notifyDataSetChanged();
-    }
 
-    Comparator<information> PicAsc = new Comparator<information>() {
-        @Override
-        public int compare(information o1, information o2) {
-            return Integer.toString(o1.getPic()).compareTo(Integer.toString(o2.getPic()));
-        }
-    };
-
-    public void setPicAscSort(){
-        Collections.sort(data2,PicAsc);
-        this.notifyDataSetChanged();
-    }
 }
