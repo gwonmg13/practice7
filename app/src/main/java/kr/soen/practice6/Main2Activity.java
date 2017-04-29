@@ -1,101 +1,66 @@
 package kr.soen.practice6;
 
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class Main2Activity extends AppCompatActivity {
-
-    final int _REQUEST_MSG_CODE =10;
-
     EditText etname,ettel,etmenu1,etmenu2,etmenu3,etaddr;
-    RadioButton radio1, radio2, radio3;
-    //private ArrayList<information> informations = new ArrayList<information>();
-    ArrayAdapter<String> adapter;
-
-
+    RadioButton radio1,radio2,radio3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
+        init();
+    }
+    void init(){
+        etname = (EditText)findViewById(R.id.etname);
+        ettel = (EditText)findViewById(R.id.ettel);
+        etmenu1 = (EditText)findViewById(R.id.etmenu1);
+        etmenu2 = (EditText)findViewById(R.id.etmenu2);
+        etmenu3 = (EditText)findViewById(R.id.etmenu3);
+        etaddr = (EditText)findViewById(R.id.etaddr);
+        radio1 = (RadioButton)findViewById(R.id.radio1);
+        radio2 = (RadioButton)findViewById(R.id.radio2);
+        radio3 = (RadioButton)findViewById(R.id.radio3);
     }
     public void onClick(View v){
+        if(v.getId() == R.id.btnAdd){ //객체 저장 및 객체 전달
+            //추가한 날짜 얻기
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA);
+            String createtime = df.format(new Date());
+            //사진정보를 저장
+            int pic = 0;
+            if(radio1.isChecked()){ pic = 1;}
+            else if(radio2.isChecked()){ pic = 2;}
+            else if(radio3.isChecked()){ pic = 3;}
 
-        if( v.getId() == R.id.btnAdd ){
-            Snackbar.make(v, "등록이 완료되었습니다. ", Snackbar.LENGTH_LONG).show();
-
-            etname = (EditText)findViewById(R.id.etname);
-            radio1 = (RadioButton)findViewById(R.id.radio1);
-            radio2 = (RadioButton)findViewById(R.id.radio2);
-            radio3 = (RadioButton)findViewById(R.id.radio3);
-            ettel = (EditText)findViewById(R.id.ettel);
-            etmenu1 = (EditText)findViewById(R.id.etmenu1);
-            etmenu2 = (EditText)findViewById(R.id.etmenu2);
-            etmenu3 = (EditText)findViewById(R.id.etmenu3);
-            etaddr = (EditText)findViewById(R.id.etaddr);
-            String category = "";
-
-            String name = etname.getText().toString();
-            if(radio1.isChecked()){
-                category = "CHICKEN";
-            }else if(radio2.isChecked()){
-                category = "PIZZA";
-            }else if(radio3.isChecked()){
-                category = "HAMBURGER";
-            }
-
-
-            //이거 인트값으로 넣어줘야함.
-            String telNum = ettel.getText().toString();
-            String menu1 = etmenu1.getText().toString();
-            String menu2 = etmenu2.getText().toString();
-            String menu3 = etmenu3.getText().toString();
-            String addr = etaddr.getText().toString();
-
-            long now = System.currentTimeMillis();
-            Date date = new Date(now);
-            SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault());
-            String strDate = dateFormat.format(date);
-
-
-            information info = new information( name,telNum,menu1,menu2,menu3,addr,strDate,category);
-            System.out.print(info.toString()+"\n");
-
-            Intent intent = new Intent(this,MainActivity.class);
-            intent.putExtra("info_1",info);
+            //객체로 저장후 객체를 메인액티비티로 전달하기
+            Intent intent = getIntent();
+            information inputed = intent.getParcelableExtra("inputdata");
+            inputed.information(etname.getText().toString(),ettel.getText().toString(),pic,etmenu1.getText().toString(),
+                    etmenu2.getText().toString(),etmenu3.getText().toString(),etaddr.getText().toString(),createtime);
+            intent.putExtra("remakemsg",inputed);
             setResult(RESULT_OK,intent);
             finish();
 
-
-        }else if(v.getId() == R.id.btnCancel){
-
-            Intent maingogo = new Intent(this,MainActivity.class);
-            setResult(RESULT_CANCELED,maingogo);
+        } else if ( v.getId() == R.id.btnCancel){ //에딧텍스트 초기화 및 액티비티 돌아가기
+            radio1.setChecked(true);
+            etname.setText("");
+            ettel.setText("");
+            etmenu1.setText("");
+            etmenu2.setText("");
+            etmenu3.setText("");
+            etaddr.setText("");
             finish();
-
         }
     }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if(requestCode==_REQUEST_MSG_CODE){
-//            if(resultCode==RESULT_OK){
-//                String msg = data.getStringExtra("remake_msg");
-//
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 }
